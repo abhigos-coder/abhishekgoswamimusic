@@ -45,41 +45,44 @@ export async function POST(request: Request) {
     const recoveryLink = `${origin}/api/recover-access/verify?token=${token}`;
 
     // Send recovery email (awaited for serverless reliability)
-    if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: process.env.GMAIL_USER,
-          pass: process.env.GMAIL_APP_PASSWORD,
-        },
-      });
+    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+      console.error('Recovery email not sent: GMAIL_USER or GMAIL_APP_PASSWORD not configured');
+      return NextResponse.json({ error: 'Email service is not configured. Please contact support.' }, { status: 500 });
+    }
 
-      try {
-        await transporter.sendMail({
-          from: process.env.GMAIL_USER,
-          to: normalizedEmail,
-          subject: 'Recover your course access — Abhishek Goswami Music',
-          text: `Hi,\n\nClick the link below to restore access to your purchased courses on this device:\n\n${recoveryLink}\n\nThis link expires in 30 minutes.\n\nIf you did not request this, you can safely ignore this email.\n\n— Abhishek Goswami Music`,
-          html: `
-            <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
-              <h2 style="margin-bottom: 16px;">Recover Your Course Access</h2>
-              <p>Click the button below to restore access to your purchased courses on this device:</p>
-              <p style="margin: 24px 0;">
-                <a href="${recoveryLink}" style="display: inline-block; padding: 12px 24px; background-color: #5e8aff; color: #fff; text-decoration: none; border-radius: 6px; font-weight: 600;">
-                  Restore Access
-                </a>
-              </p>
-              <p style="font-size: 13px; color: #666;">This link expires in 30 minutes.</p>
-              <p style="font-size: 13px; color: #666;">If you did not request this, you can safely ignore this email.</p>
-              <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
-              <p style="font-size: 12px; color: #999;">Abhishek Goswami Music</p>
-            </div>
-          `,
-        });
-      } catch (err) {
-        console.error('Failed to send recovery email:', err);
-        return NextResponse.json({ error: 'Failed to send email. Please try again.' }, { status: 500 });
-      }
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD,
+      },
+    });
+
+    try {
+      await transporter.sendMail({
+        from: process.env.GMAIL_USER,
+        to: normalizedEmail,
+        subject: 'Recover your course access — Abhishek Goswami Music',
+        text: `Hi,\n\nClick the link below to restore access to your purchased courses on this device:\n\n${recoveryLink}\n\nThis link expires in 30 minutes.\n\nIf you did not request this, you can safely ignore this email.\n\n— Abhishek Goswami Music`,
+        html: `
+          <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
+            <h2 style="margin-bottom: 16px;">Recover Your Course Access</h2>
+            <p>Click the button below to restore access to your purchased courses on this device:</p>
+            <p style="margin: 24px 0;">
+              <a href="${recoveryLink}" style="display: inline-block; padding: 12px 24px; background-color: #5e8aff; color: #fff; text-decoration: none; border-radius: 6px; font-weight: 600;">
+                Restore Access
+              </a>
+            </p>
+            <p style="font-size: 13px; color: #666;">This link expires in 30 minutes.</p>
+            <p style="font-size: 13px; color: #666;">If you did not request this, you can safely ignore this email.</p>
+            <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
+            <p style="font-size: 12px; color: #999;">Abhishek Goswami Music</p>
+          </div>
+        `,
+      });
+    } catch (err) {
+      console.error('Failed to send recovery email:', err);
+      return NextResponse.json({ error: 'Failed to send email. Please try again.' }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
