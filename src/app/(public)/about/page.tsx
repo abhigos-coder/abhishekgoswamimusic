@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import ContactForm from '@/components/forms/ContactForm';
+import TestimonialGallery from '@/components/ui/TestimonialGallery';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 
 export const dynamic = 'force-dynamic';
@@ -114,18 +115,7 @@ export default async function AboutPage() {
       {testimonials && testimonials.length > 0 && (
         <section className="mb-16">
           <p className="label-mono mb-8">What Students Say</p>
-          <div className="columns-2 sm:columns-3 gap-4 space-y-4">
-            {testimonials.map((t: { id: string; image_url: string }, i: number) => (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img
-                key={t.id}
-                src={t.image_url}
-                alt={`Student feedback ${i + 1}`}
-                className="w-full rounded-lg border border-border break-inside-avoid"
-                loading="lazy"
-              />
-            ))}
-          </div>
+          <TestimonialGallery testimonials={testimonials} />
         </section>
       )}
 
