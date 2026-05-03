@@ -61,6 +61,9 @@ export async function proxy(request: NextRequest) {
     }
   );
 
+  // Refresh auth session for all matched routes so cookies stay valid
+  await supabase.auth.getUser();
+
   // Protect admin routes — requires authentication + admin role
   // /admin/login is the login page itself — must be reachable unauthenticated
   if (
@@ -95,5 +98,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/:path*'],
+  matcher: ['/admin/:path*', '/api/:path*', '/auth/:path*', '/reset-password'],
 };

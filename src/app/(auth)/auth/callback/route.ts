@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
 
 // Allowlist of paths the auth callback may redirect to.
 // Never allow external URLs or arbitrary paths to prevent open-redirect attacks.
@@ -22,16 +23,46 @@ export async function GET(request: Request) {
   const redirect = safeRedirectPath(searchParams.get('redirect'));
 
   if (code) {
-    const supabase = await createClient();
+    const cookieStore = await cookies();
+
+    // Track cookies that need to be set on the redirect response
+    const cookiesToForward: { name: string; value: string; options: Record<string, unknown> }[] = [];
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookiesToForward.push({ name, value, options: options as Record<string, unknown> });
+              try {
+                cookieStore.set(name, value, options);
+              } catch {
+                // May fail in read-only contexts
+              }
+            });
+          },
+        },
+      }
+    );
+
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (error) {
-      // Code exchange failed — redirect to forgot-password with error hint
       const fallback = redirect === '/reset-password' ? '/forgot-password' : '/login';
-      return NextResponse.redirect(
-        `${origin}${fallback}?error=link_expired`
-      );
+      return NextResponse.redirect(`${origin}${fallback}?error=link_expired`);
     }
+
+    // Forward auth cookies on the redirect response so the session persists
+    const response = NextResponse.redirect(`${origin}${redirect}`);
+    for (const { name, value, options } of cookiesToForward) {
+      response.cookies.set(name, value, options as Parameters<typeof response.cookies.set>[2]);
+    }
+    return response;
   }
 
   return NextResponse.redirect(`${origin}${redirect}`);
