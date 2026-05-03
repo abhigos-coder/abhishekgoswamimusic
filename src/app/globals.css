@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-surface: var(--bg2);
+  --color-surface-light: var(--bg3);
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
+
+  --color-primary: var(--accent);
+  --color-primary-hover: var(--accent-hover);
+  --color-secondary: var(--accent);
+  --color-secondary-hover: var(--accent-hover);
+
+  --color-text: var(--fg);
+  --color-text-muted: var(--fg2);
+  --color-text-dim: var(--fg3);
+
+  --color-navbar-bg: var(--nav-bg);
+  --color-navbar-text: var(--nav-fg);
+  --color-navbar-text-muted: var(--nav-fg2);
+  --color-navbar-border: var(--nav-border);
+
+  --color-danger: #dc2626;
+  --color-success: #16a34a;
+
+  --font-sans: var(--font-nunito);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fraunces);
+}
+
+/* ── Neon Jazz — Dark (smoky club, neon sign glow) ── */
+:root {
+  --bg: #050610;
+  --bg2: #0a0c1c;
+  --bg3: #12152d;
+  --border: #1a1e40;
+  --border-hover: #2a3060;
+  --accent: #5e8aff;
+  --accent-hover: #82a4ff;
+  --fg: #c8cade;
+  --fg2: #606888;
+  --fg3: #424866;
+
+  /* Navbar — Darkest corner of the club */
+  --nav-bg: #060814;
+  --nav-fg: #c8cade;
+  --nav-fg2: #606888;
+  --nav-border: #141838;
+}
+
+/* ── Neon Jazz — Light (hazy blue afternoon) ── */
+:root.light {
+  --bg: #eceef6;
+  --bg2: #dde0ee;
+  --bg3: #ccd0e2;
+  --border: #a0a5c4;
+  --border-hover: #5e8aff;
+  --accent: #3458b8;
+  --accent-hover: #283f90;
+  --fg: #0c0e22;
+  --fg2: #404665;
+  --fg3: #5e6488;
+
+  /* Navbar — Deep stage blue */
+  --nav-bg: #0c0e22;
+  --nav-fg: #dde0ee;
+  --nav-fg2: #606888;
+  --nav-border: #141838;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-nunito), system-ui, sans-serif;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Fraunces for all headings — bold, ink-press personality */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: rgba(94, 138, 255, 0.3);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-hover);
+  border-radius: 3px;
+}
+
+.smoky-gradient {
+  background: radial-gradient(ellipse at 50% 0%, rgba(94, 138, 255, 0.15) 0%, transparent 60%);
+}
+
+.label-mono {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg2);
+}
+
+/* Prevent iOS Safari from zooming in on focused inputs (requires font-size >= 16px) */
+@media (max-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Remove tap highlight on interactive elements (Android/iOS) */
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Safe-area padding for notched iPhones / Dynamic Island */
+@supports (padding: env(safe-area-inset-top)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

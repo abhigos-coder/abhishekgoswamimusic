@@ -1,0 +1,8 @@
+id,title,slug,description,price,thumbnail_url,is_published,created_at,updated_at
+8d582d05-0062-4132-bcee-45219c8ef708,"Guitar Essentials ",guitar-essentials,"A beginner-friendly DIY guitar course to help you start from scratch and build a solid foundation.
+Contains short and simple, step by step instruction videos which are made to make you understand the instrument and play it easily. Learn at your own pace 🎸
+
+*New videos added every week 
+
+Thanks
+Abhishek Goswami",99900,https://bklbtfgmqzzvcpoihgvb.supabase.co/storage/v1/object/public/course-thumbnails/1777475032930-bgvk3h.jpg,true,2026-04-26 05:58:44.971551+00,2026-05-02 12:44:41.616782+00

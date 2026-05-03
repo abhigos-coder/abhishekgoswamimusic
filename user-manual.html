@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abhishek Goswami Music — User Manual</title>
+<style>
+  :root {
+    --bg: #110a00;
+    --bg2: #1c1100;
+    --border: #2e1f08;
+    --fg: #fdf4e7;
+    --fg2: #a08060;
+    --fg3: #6b5040;
+    --accent: #ff6b35;
+    --accent-hover: #ff8c5a;
+    --danger: #dc2626;
+    --success: #16a34a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.02em;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .subtitle {
+    color: var(--fg2);
+    font-size: 0.85rem;
+    margin-bottom: 3rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  h2:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+
+  h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    color: var(--accent);
+  }
+
+  .label {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg2);
+    margin-bottom: 0.5rem;
+  }
+
+  p { margin-bottom: 1rem; color: var(--fg2); }
+
+  strong { color: var(--fg); font-weight: 600; }
+
+  ul, ol {
+    margin-bottom: 1rem;
+    padding-left: 1.25rem;
+    color: var(--fg2);
+  }
+
+  li { margin-bottom: 0.4rem; }
+  li strong { color: var(--fg); }
+
+  code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.8em;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  pre {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    line-height: 1.6;
+  }
+
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--fg2);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+  }
+
+  th {
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg3);
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg2);
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--fg);
+    margin-bottom: 0.35rem;
+  }
+
+  .card p { font-size: 0.85rem; margin-bottom: 0; }
+
+  .flow {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .flow-step:last-child { margin-bottom: 0; }
+
+  .flow-arrow {
+    color: var(--accent);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    width: 1.5rem;
+    text-align: center;
+    padding-top: 0.1rem;
+  }
+
+  .flow-text {
+    color: var(--fg2);
+    font-size: 0.85rem;
+  }
+
+  .flow-text strong { color: var(--fg); }
+
+  .badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 0.15em 0.5em;
+    border-radius: 3px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-orange { background: rgba(255,107,53,0.15); color: var(--accent); }
+  .badge-green { background: rgba(22,163,74,0.15); color: var(--success); }
+  .badge-red { background: rgba(220,38,38,0.15); color: var(--danger); }
+
+  .layer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .layer {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    padding: 1rem 1.25rem;
+  }
+
+  .layer-num {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+  }
+
+  .layer-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--fg);
+    margin-bottom: 0.35rem;
+  }
+
+  .layer p { font-size: 0.82rem; margin-bottom: 0; }
+
+  .toc {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .toc-title {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg3);
+    margin-bottom: 0.75rem;
+  }
+
+  .toc a {
+    display: block;
+    color: var(--fg2);
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0.25rem 0;
+    transition: color 0.15s;
+  }
+
+  .toc a:hover { color: var(--accent); }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 2rem 1rem 4rem; }
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>Abhishek <span>Goswami</span> Music</h1>
+  <p class="subtitle">Site User Manual &amp; Admin Guide</p>
+
+  <!-- Table of Contents -->
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <a href="#features">1. What This Site Offers</a>
+    <a href="#purchase-flow">2. How the Purchase Flow Works</a>
+    <a href="#protection">3. How Content Protection Works</a>
+    <a href="#razorpay">4. How Razorpay Protects Payments</a>
+    <a href="#recover-access">5. How to Recover Access</a>
+    <a href="#upload-workflow">6. How to Upload a Paid Course</a>
+    <a href="#admin-preview">7. Admin Video Preview</a>
+    <a href="#youtube-settings">8. YouTube Upload Settings</a>
+    <a href="#setup">9. Setup Checklist</a>
+  </div>
+
+  <!-- 1. Features -->
+  <h2 id="features">What This Site Offers</h2>
+
+  <h3>For Visitors (Public)</h3>
+  <ul>
+    <li><strong>Home</strong> &mdash; Landing page showcasing all published courses in a grid</li>
+    <li><strong>About</strong> &mdash; Artist bio, teaching approach, social links, and contact form</li>
+    <li><strong>Course Detail</strong> &mdash; Description, full curriculum outline with durations, price, and preview videos</li>
+    <li><strong>Preview Videos</strong> &mdash; Watch selected free preview lessons directly on the course page (no account needed)</li>
+    <li><strong>Day/Night Theme</strong> &mdash; Toggle between dark and light modes</li>
+  </ul>
+
+  <h3>For Buyers (No Account Required)</h3>
+  <ul>
+    <li><strong>Guest Checkout</strong> &mdash; Enter email + phone, pay via Razorpay (UPI, cards, netbanking) &mdash; no signup needed</li>
+    <li><strong>Course Player</strong> &mdash; Watch sequential video lessons with a sidebar playlist</li>
+    <li><strong>Lifetime Access</strong> &mdash; Purchase is stored permanently; access via browser cookie (1 year)</li>
+    <li><strong>Recover Access</strong> &mdash; Lost your cookies? Enter your purchase email at <code>/recover-access</code> to get a magic link that restores access on any device or browser</li>
+  </ul>
+
+  <h3>For Admin (Musician)</h3>
+  <ul>
+    <li><strong>Admin Panel</strong> (<code>/admin</code>) &mdash; Manage the entire site (protected by Supabase auth)</li>
+    <li><strong>Dashboard</strong> &mdash; Courses, students (by unique email), revenue, and unread messages at a glance</li>
+    <li><strong>Courses CRUD</strong> &mdash; Create, edit, publish/unpublish, and delete courses</li>
+    <li><strong>Video Management</strong> &mdash; Add YouTube unlisted URLs, set preview videos, live preview before saving</li>
+    <li><strong>Payments</strong> &mdash; View all transactions (buyer email, course, amount, status, Razorpay ID)</li>
+    <li><strong>Messages</strong> &mdash; Read, mark as read/unread, and delete contact messages</li>
+  </ul>
+
+  <!-- 2. Purchase Flow -->
+  <h2 id="purchase-flow">How the Purchase Flow Works</h2>
+
+  <p>Buyers do <strong>not need to create an account</strong>. They provide email + phone during checkout, pay, and immediately get access. Access is tied to an httpOnly browser cookie.</p>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-text">Visitor browses courses on the home page</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-text">Clicks a course &rarr; sees description, curriculum, price, preview videos</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-text">Clicks <strong>&ldquo;Buy Now &mdash; &#8377;999&rdquo;</strong></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-text">Guest checkout modal opens &rarr; enters <strong>email + phone</strong></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-text">Clicks &ldquo;Continue to Payment&rdquo; &rarr; <strong>Razorpay checkout</strong> opens (UPI / Card / Netbanking)</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-text">Payment completes &rarr; signature verified &rarr; purchase marked <span class="badge badge-green">completed</span></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-text">httpOnly cookie set &rarr; redirected to <strong>&ldquo;Payment Successful!&rdquo;</strong> page</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-text">Clicks &ldquo;Start Watching&rdquo; &rarr; full course player with all lessons &mdash; <strong>lifetime access</strong></div>
+    </div>
+  </div>
+
+  <p><strong>Trade-off:</strong> If a buyer clears cookies, switches browsers, or uses a new device, they lose access. This is solved by the <a href="#recover-access" style="color: var(--accent);">Recover Access</a> flow.</p>
+
+  <!-- 3. Content Protection -->
+  <h2 id="protection">How Content Protection Works</h2>
+
+  <p>Premium course videos are YouTube <strong>unlisted</strong> links. Anyone with the link can watch. The site prevents non-paying users from ever seeing these links through <strong>2 layers of protection</strong>:</p>
+
+  <div class="layer-grid">
+    <div class="layer">
+      <div class="layer-num">Layer 1</div>
+      <div class="layer-title">Cookie Validation</div>
+      <p>When someone visits <code>/courses/guitar-basics/watch</code>, the server reads the <code>purchase_access_{courseId}</code> cookie. If missing &rarr; redirected to the course detail page. They never reach the player.</p>
+    </div>
+    <div class="layer">
+      <div class="layer-num">Layer 2</div>
+      <div class="layer-title">Server-Side Database Verification</div>
+      <p>Even if a cookie exists, the server validates its value (a UUID <code>access_token</code>) against the <code>purchases</code> table, checking for a <strong>completed purchase</strong> with that token for that course. A guessed or forged cookie will fail this check. YouTube URLs are only loaded if verification passes.</p>
+    </div>
+  </div>
+
+  <h3>What Each User Sees</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>User State</th>
+        <th>Course Detail Page</th>
+        <th>Course Player</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>No purchase cookie</td>
+        <td>Curriculum titles + lock icons, &ldquo;Buy Now&rdquo; button, preview videos</td>
+        <td>Redirected to course detail</td>
+      </tr>
+      <tr>
+        <td>Valid purchase cookie</td>
+        <td>Curriculum + play icons, &ldquo;Continue Watching&rdquo;</td>
+        <td>Full video player with all lessons</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 4. Razorpay -->
+  <h2 id="razorpay">How Razorpay Protects Payments</h2>
+
+  <p>Razorpay handles the money. Here's the exact flow:</p>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-arrow">1</div>
+      <div class="flow-text">User clicks <strong>&ldquo;Buy Now&rdquo;</strong> &rarr; enters email + phone &rarr; server creates a Razorpay order</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow">2</div>
+      <div class="flow-text">Razorpay checkout modal opens &rarr; user pays via <strong>UPI / Card / Netbanking</strong></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow">3</div>
+      <div class="flow-text">Razorpay returns a <strong>payment ID + cryptographic signature</strong></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow">4</div>
+      <div class="flow-text">Server <strong>verifies the signature</strong> using HMAC-SHA256 with your secret key</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow">5</div>
+      <div class="flow-text">Signature valid &rarr; purchase marked <span class="badge badge-green">completed</span> &rarr; httpOnly cookie set</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow">6</div>
+      <div class="flow-text">User can now access all course videos &mdash; <strong>lifetime access</strong></div>
+    </div>
+  </div>
+
+  <p><strong>Why this is secure:</strong> Only Razorpay can produce a valid signature. Only your server has the secret key to verify it. No one can fake a payment &mdash; the purchase is only marked &ldquo;completed&rdquo; after cryptographic verification passes.</p>
+
+  <!-- 5. Recover Access -->
+  <h2 id="recover-access">How to Recover Access</h2>
+
+  <p>If a buyer clears their browser cookies, switches to a new browser, or uses a different device, they can <strong>restore access without contacting support</strong>:</p>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-arrow">1</div>
+      <div class="flow-text">Visit <code>/recover-access</code> (or click <strong>&ldquo;Already purchased? Recover access&rdquo;</strong> on any course page)</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow">2</div>
+      <div class="flow-text">Enter the <strong>email used during purchase</strong></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow">3</div>
+      <div class="flow-text">Receive a <strong>magic link</strong> via email (expires in 30 minutes)</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow">4</div>
+      <div class="flow-text">Click the link &rarr; all purchase cookies are <strong>restored</strong> on the current browser</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow">5</div>
+      <div class="flow-text">See the <span class="badge badge-green">Access Restored!</span> confirmation page</div>
+    </div>
+  </div>
+
+  <p><strong>How it works under the hood:</strong> The server generates a signed HMAC token encoding email + timestamp (no database changes needed). When the link is clicked, it verifies the token&rsquo;s signature, checks it hasn&rsquo;t expired, fetches all completed purchases for that email, and sets a cookie for each course.</p>
+
+  <!-- 6. Upload Workflow -->
+  <h2 id="upload-workflow">How to Upload a Paid Course</h2>
+
+  <p>The site does <strong>not host any video files</strong>. All videos live on YouTube as <strong>unlisted</strong> uploads. You paste URLs into the admin panel.</p>
+
+  <h3>Step 1: Record &amp; Upload to YouTube</h3>
+  <ol>
+    <li>Record your course lessons</li>
+    <li>Upload each lesson to your YouTube channel</li>
+    <li><strong>Set each video to &ldquo;Unlisted&rdquo;</strong> &mdash; YouTube Studio &rarr; Content &rarr; video &rarr; Visibility &rarr; Unlisted</li>
+    <li>Copy the URL of each video (e.g., <code>https://www.youtube.com/watch?v=abc123</code>)</li>
+  </ol>
+
+  <h3>Step 2: Create the Course</h3>
+  <ol>
+    <li>Go to <code>/admin</code> &rarr; <strong>Courses</strong> &rarr; <strong>New Course</strong></li>
+    <li>Fill in: <strong>Title</strong>, <strong>Slug</strong> (auto-generated), <strong>Description</strong>, <strong>Price</strong> (in Rupees)</li>
+    <li>Optionally add a <strong>Thumbnail URL</strong></li>
+    <li>Leave <strong>Published</strong> unchecked while adding videos</li>
+    <li>Click <strong>Create Course</strong></li>
+  </ol>
+
+  <h3>Step 3: Add Videos</h3>
+  <ol>
+    <li>From Courses list, click the <strong>video icon</strong> next to your course</li>
+    <li>Click <strong>Add Video</strong> &mdash; a form appears with a <strong>live YouTube preview</strong></li>
+    <li>Paste the YouTube URL &mdash; the video loads immediately so you can verify it&rsquo;s correct</li>
+    <li>Fill in title, duration (optional), and check <strong>Free Preview</strong> if it&rsquo;s a teaser</li>
+    <li>Repeat for all lessons</li>
+  </ol>
+
+  <h3>Step 4: Publish</h3>
+  <ol>
+    <li>Edit the course &rarr; check <strong>Published</strong> &rarr; <strong>Update Course</strong></li>
+    <li>The course now appears on the home page with the &ldquo;Buy Now&rdquo; button</li>
+  </ol>
+
+  <h3>Step 5: Monitor Payments</h3>
+  <ul>
+    <li>Go to <code>/admin</code> &rarr; <strong>Payments</strong> to see all transactions</li>
+    <li>Each row shows: date, buyer email, course, amount, status, and Razorpay payment ID</li>
+    <li>Cross-reference with your Razorpay dashboard for refunds or disputes</li>
+  </ul>
+
+  <h3>Adding More Lessons Later</h3>
+  <p>Upload the new lesson to YouTube (unlisted) &rarr; go to Admin &rarr; Courses &rarr; video icon &rarr; Add Video. Buyers who already purchased see the new lesson immediately.</p>
+
+  <h3>Replacing a Video</h3>
+  <p>Upload new version to YouTube (unlisted) &rarr; delete old entry in Admin &rarr; add new one with the new URL.</p>
+
+  <!-- 7. Admin Preview -->
+  <h2 id="admin-preview">Admin Video Preview</h2>
+
+  <p>The <strong>Course Videos</strong> admin page includes:</p>
+
+  <div class="card">
+    <div class="card-title">Live Preview on Add</div>
+    <p>When you paste a YouTube URL in the add form, the video loads immediately. You can watch it right there to confirm it&rsquo;s the right one before saving.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Inline Preview on Browse</div>
+    <p>Click the expand arrow on any video in the list to see the full embedded player. Verify what your students will see without leaving the admin panel.</p>
+  </div>
+
+  <!-- 8. YouTube Settings -->
+  <h2 id="youtube-settings">YouTube Upload Settings</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Setting</th>
+        <th>Value</th>
+        <th>Why</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Visibility</td>
+        <td><strong>Unlisted</strong></td>
+        <td>Only accessible via direct link from your site</td>
+      </tr>
+      <tr>
+        <td>Comments</td>
+        <td>Off (recommended)</td>
+        <td>Prevents URL discovery via notifications</td>
+      </tr>
+      <tr>
+        <td>Embedding</td>
+        <td><strong>Allowed</strong></td>
+        <td>Required for the site&rsquo;s video player</td>
+      </tr>
+      <tr>
+        <td>Age restriction</td>
+        <td>None</td>
+        <td>Unless content requires it</td>
+      </tr>
+      <tr>
+        <td>Playlist</td>
+        <td>Don&rsquo;t add to public playlists</td>
+        <td>Public playlists expose unlisted URLs</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 9. Setup -->
+  <h2 id="setup">Setup Checklist</h2>
+
+  <ol>
+    <li>Create a <strong>Supabase</strong> project &rarr; copy URL + anon key + service role key</li>
+    <li>Run <code>supabase-migration.sql</code> in Supabase SQL Editor</li>
+    <li>Create a <strong>Razorpay</strong> account &rarr; copy test key ID + secret</li>
+    <li>Set up a <strong>Gmail App Password</strong> for sending recovery emails (Google Account &rarr; Security &rarr; 2FA &rarr; App Passwords)</li>
+    <li>Update <code>.env.local</code> with all credentials:
+      <pre><code>NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+NEXT_PUBLIC_RAZORPAY_KEY_ID=...
+RAZORPAY_KEY_SECRET=...
+GMAIL_USER=...
+GMAIL_APP_PASSWORD=...
+NEXT_PUBLIC_APP_URL=http://localhost:3000</code></pre>
+    </li>
+    <li>Run <code>npm run dev</code> &rarr; open <code>http://localhost:3000</code></li>
+    <li>Register an admin account &rarr; set as admin in Supabase SQL:
+      <pre><code>UPDATE public.profiles SET role = 'admin' WHERE email = 'your@email.com';</code></pre>
+    </li>
+    <li>Go to <code>/admin</code> &rarr; start adding courses and videos</li>
+    <li>For production: deploy to Vercel, switch Razorpay to live mode, update <code>NEXT_PUBLIC_APP_URL</code></li>
+  </ol>
+
+  <hr>
+
+  <p style="text-align: center; color: var(--fg3); font-size: 0.75rem; margin-top: 2rem;">
+    Abhishek Goswami Music &mdash; Built with Next.js, Supabase, Razorpay
+  </p>
+
+</div>
+</body>
+</html>

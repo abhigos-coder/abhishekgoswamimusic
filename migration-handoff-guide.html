@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Migration Handoff Guide — Abhishek Goswami Music</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="data:text/css,body{font-family:system-ui,sans-serif;max-width:850px;margin:40px auto;padding:0 20px;line-height:1.6;color:%23222}table{border-collapse:collapse;width:100%}th,td{border:1px solid %23ddd;padding:8px 12px;text-align:left}th{background:%23f5f5f5}code{background:%23f0f0f0;padding:2px 6px;border-radius:3px}pre{background:%23f0f0f0;padding:16px;border-radius:6px;overflow-x:auto}h1,h2,h3{margin-top:1.5em}hr{border:none;border-top:1px solid %23ddd;margin:2em 0}" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Migration Handoff Guide — Abhishek Goswami Music</h1>
+</header>
+<h1 id="migration-handoff-guide-abhishek-goswami-music">Migration
+Handoff Guide — Abhishek Goswami Music</h1>
+<p><strong>Date:</strong> April 29, 2026 <strong>Project:</strong>
+Abhishek Goswami Music — Course Selling Platform <strong>Stack:</strong>
+Next.js 16, Supabase, Razorpay, Gmail SMTP, Vercel</p>
+<hr />
+<h2 id="project-overview">1. Project Overview</h2>
+<p>A Next.js 16 course-selling platform where users can browse and
+purchase music courses. Course content is delivered via embedded YouTube
+videos. The platform includes:</p>
+<ul>
+<li><strong>Public site</strong> — Course listings, purchase flow, video
+playback</li>
+<li><strong>Admin panel</strong> — Course management, video management,
+contact messages, payment records</li>
+<li><strong>Guest checkout</strong> — Buyers don’t need an account;
+access is tied to email + access token</li>
+<li><strong>Access recovery</strong> — Email-based recovery flow for
+returning buyers</li>
+</ul>
+<hr />
+<h2 id="technology-stack">2. Technology Stack</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 40%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Technology</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Framework</td>
+<td>Next.js 16.2.4</td>
+<td>App Router, TypeScript, Tailwind CSS 4</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>Supabase (PostgreSQL)</td>
+<td>5 tables with Row Level Security</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>Supabase Auth</td>
+<td>Admin login + session management</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>Supabase Storage</td>
+<td><code>course-thumbnails</code> bucket (public)</td>
+</tr>
+<tr>
+<td>Payments</td>
+<td>Razorpay</td>
+<td>Order creation + HMAC signature verification</td>
+</tr>
+<tr>
+<td>Email</td>
+<td>Nodemailer + Gmail SMTP</td>
+<td>Contact notifications, access recovery</td>
+</tr>
+<tr>
+<td>Hosting</td>
+<td>Vercel</td>
+<td>Mumbai region (bom1)</td>
+</tr>
+<tr>
+<td>Videos</td>
+<td>YouTube</td>
+<td>Unlisted videos embedded via iframe</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="what-changes-vs.-what-stays">3. What Changes vs. What Stays</h2>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 45%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th>Service</th>
+<th>Change Needed?</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Razorpay</strong></td>
+<td>No change</td>
+<td>Same account and keys — reuse as-is</td>
+</tr>
+<tr>
+<td><strong>Gmail SMTP</strong></td>
+<td>No change</td>
+<td>Same Gmail credentials — reuse as-is</td>
+</tr>
+<tr>
+<td><strong>Domain</strong></td>
+<td>No change</td>
+<td>Same domain — just re-point to new team’s Vercel</td>
+</tr>
+<tr>
+<td><strong>Supabase</strong></td>
+<td>New project needed</td>
+<td>Migrate database + storage to new team’s Supabase</td>
+</tr>
+<tr>
+<td><strong>Vercel</strong></td>
+<td>New project needed</td>
+<td>Deploy to new team’s Vercel account</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="supabase-migration-main-effort">4. Supabase Migration (Main
+Effort)</h2>
+<p><strong>Current project URL:</strong> Hosted on Supabase cloud.</p>
+<p><strong>Action needed:</strong></p>
+<ol type="1">
+<li>Create a new Supabase project under the new team’s account</li>
+<li>Run <code>supabase-migration.sql</code> (included in the repository
+root) to create the full schema with:
+<ul>
+<li>All 5 tables</li>
+<li>Row Level Security (RLS) policies</li>
+<li>Indexes</li>
+<li>Triggers (auto-update timestamps, auto-create profile on
+signup)</li>
+</ul></li>
+<li>Export existing data from the current project:
+<ul>
+<li>Use <code>pg_dump</code> via Supabase dashboard or CLI</li>
+<li>Or export tables as CSV from the Supabase Table Editor</li>
+</ul></li>
+<li>Import data into the new project</li>
+<li>Recreate the <code>course-thumbnails</code> storage bucket (set to
+<strong>public</strong>)</li>
+<li>Download all existing thumbnails and re-upload to the new
+bucket</li>
+<li>Update Supabase environment variables to point to the new
+project</li>
+</ol>
+<p><strong>Database Tables:</strong></p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 32%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr>
+<th>Table</th>
+<th>Purpose</th>
+<th>Key Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>profiles</code></td>
+<td>User accounts &amp; roles</td>
+<td>id, email, role (user/admin)</td>
+</tr>
+<tr>
+<td><code>courses</code></td>
+<td>Course listings</td>
+<td>title, slug, price (paise), thumbnail_url, is_published</td>
+</tr>
+<tr>
+<td><code>course_videos</code></td>
+<td>Lesson videos</td>
+<td>course_id, title, youtube_url, sort_order, is_preview</td>
+</tr>
+<tr>
+<td><code>purchases</code></td>
+<td>Payment records</td>
+<td>email, course_id, razorpay_payment_id, status, access_token</td>
+</tr>
+<tr>
+<td><code>contact_messages</code></td>
+<td>Contact form submissions</td>
+<td>name, email, message, is_read</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="vercel-domain-transfer">5. Vercel &amp; Domain Transfer</h2>
+<p>This is the key infrastructure change. The domain stays the same — it
+just needs to point to the new team’s Vercel project.</p>
+<h3 id="step-by-step-transfer-to-new-teams-vercel">Step-by-step:
+Transfer to New Team’s Vercel</h3>
+<ol type="1">
+<li><strong>New team</strong> creates a Vercel account and imports the
+Git repository</li>
+<li><strong>New team</strong> sets all environment variables in their
+Vercel project dashboard (see Section 6)</li>
+<li><strong>New team</strong> adds the domain in their Vercel project:
+<strong>Project Settings &gt; Domains &gt; Add</strong></li>
+<li>Vercel will provide DNS records (typically an A record or
+CNAME)</li>
+<li><strong>Current owner</strong> removes the domain from the old
+Vercel project: <strong>Project Settings &gt; Domains &gt;
+Remove</strong></li>
+<li><strong>Current owner</strong> updates DNS records at the domain
+registrar to point to the new team’s Vercel:
+<ul>
+<li>If using Vercel DNS: Transfer the domain to the new team’s Vercel
+account via <strong>Settings &gt; Domains &gt; Transfer</strong></li>
+<li>If using an external registrar (GoDaddy, Namecheap, Cloudflare,
+etc.): Update the DNS records to the values provided by the new team’s
+Vercel project</li>
+</ul></li>
+<li>Wait for DNS propagation (usually minutes, can take up to 48
+hours)</li>
+<li>Verify the site loads on the new deployment</li>
+<li><strong>Current owner</strong> deletes the old Vercel project</li>
+</ol>
+<p><strong>Note:</strong> To avoid downtime, coordinate steps 5-6
+together. Remove from old project and update DNS in quick succession, or
+have the new team’s Vercel project ready first.</p>
+<h3 id="alternative-transfer-vercel-project-directly">Alternative:
+Transfer Vercel Project Directly</h3>
+<p>If both parties are on Vercel Pro/Enterprise, Vercel supports direct
+project transfers: - Go to <strong>Project Settings &gt; General &gt;
+Transfer Project</strong> - Enter the new team’s Vercel account - This
+transfers the project, environment variables, and domain configuration
+in one step</p>
+<hr />
+<h2 id="environment-variables">6. Environment Variables</h2>
+<p>The new team must configure these in their Vercel dashboard
+(<strong>Project Settings &gt; Environment Variables</strong>):</p>
+<pre><code># Supabase (from their NEW Supabase project)
+NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
+
+# Razorpay (NO CHANGE — same keys)
+NEXT_PUBLIC_RAZORPAY_KEY_ID=&lt;provide current key&gt;
+RAZORPAY_KEY_SECRET=&lt;provide current secret&gt;
+
+# Gmail SMTP (NO CHANGE — same credentials)
+GMAIL_USER=&lt;provide current email&gt;
+GMAIL_APP_PASSWORD=&lt;provide current app password&gt;
+
+# Application URL (NO CHANGE — same domain)
+NEXT_PUBLIC_APP_URL=https://&lt;current-domain&gt;</code></pre>
+<p><strong>Important:</strong> Only the three Supabase variables change.
+Razorpay, Gmail, and App URL stay the same. Share the Razorpay and Gmail
+credentials securely with the new team (use a password manager or
+encrypted channel).</p>
+<hr />
+<h2 id="key-files-reference">7. Key Files Reference</h2>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>supabase-migration.sql</code></td>
+<td>Full database schema, RLS policies, indexes, triggers</td>
+</tr>
+<tr>
+<td><code>src/lib/supabase/admin.ts</code></td>
+<td>Service-role Supabase client (bypasses RLS)</td>
+</tr>
+<tr>
+<td><code>src/lib/supabase/server.ts</code></td>
+<td>Server-side Supabase client with SSR cookie handling</td>
+</tr>
+<tr>
+<td><code>src/lib/supabase/client.ts</code></td>
+<td>Browser-side Supabase client</td>
+</tr>
+<tr>
+<td><code>src/lib/razorpay.ts</code></td>
+<td>Razorpay SDK initialization</td>
+</tr>
+<tr>
+<td><code>src/proxy.ts</code></td>
+<td>Middleware — CSRF protection + admin route auth</td>
+</tr>
+<tr>
+<td><code>next.config.ts</code></td>
+<td>CSP headers, security headers, image remote patterns</td>
+</tr>
+<tr>
+<td><code>vercel.json</code></td>
+<td>Deployment region configuration (Mumbai)</td>
+</tr>
+<tr>
+<td><code>src/types/database.ts</code></td>
+<td>TypeScript interfaces for all database tables</td>
+</tr>
+<tr>
+<td><code>src/lib/constants.ts</code></td>
+<td>Site name, tagline, description</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="security-configuration">8. Security Configuration</h2>
+<p>The following security measures are configured in
+<code>next.config.ts</code> and <code>src/proxy.ts</code>:</p>
+<ul>
+<li><strong>Content Security Policy (CSP)</strong> — Restricts script,
+style, image, and frame sources</li>
+<li><strong>CSRF Protection</strong> — Blocks cross-origin mutations to
+<code>/api/*</code></li>
+<li><strong>Security Headers</strong> — X-Frame-Options, HSTS,
+X-Content-Type-Options, Referrer-Policy</li>
+<li><strong>Admin Auth Middleware</strong> — Verifies admin role before
+allowing access to <code>/admin/*</code></li>
+</ul>
+<p>No changes needed here since the domain remains the same.</p>
+<hr />
+<h2 id="razorpay-details-no-change">9. Razorpay Details (No Change)</h2>
+<p>The Razorpay integration stays as-is. For reference:</p>
+<ul>
+<li><strong>Integration type:</strong> Razorpay Checkout.js with
+server-side order creation</li>
+<li><strong>Signature verification:</strong> HMAC-SHA256</li>
+<li><strong>Endpoints:</strong>
+<ul>
+<li><code>POST /api/razorpay/create-order</code> — Creates a Razorpay
+order</li>
+<li><code>POST /api/razorpay/verify</code> — Verifies payment signature
+and activates access</li>
+</ul></li>
+<li><strong>Current mode:</strong> Test keys (<code>rzp_test_*</code>) —
+switch to live keys when going to production</li>
+</ul>
+<hr />
+<h2 id="gmail-smtp-details-no-change">10. Gmail SMTP Details (No
+Change)</h2>
+<p>The email setup stays as-is. For reference:</p>
+<ul>
+<li><strong>Library:</strong> Nodemailer with Gmail SMTP</li>
+<li><strong>Used for:</strong>
+<ul>
+<li>Contact form notifications (sent to admin inbox)</li>
+<li>Course access recovery links (sent to buyers)</li>
+</ul></li>
+<li><strong>Note:</strong> If email volume grows significantly, consider
+upgrading to a transactional email service (Resend, SendGrid, AWS SES)
+for better deliverability and rate limits</li>
+</ul>
+<hr />
+<h2 id="deployment-steps-for-new-team">11. Deployment Steps for New
+Team</h2>
+<ol type="1">
+<li>Clone the Git repository</li>
+<li>Run <code>npm install</code></li>
+<li>Create a new Supabase project and run
+<code>supabase-migration.sql</code></li>
+<li>Import existing data (all 5 tables + storage bucket thumbnails)</li>
+<li>Create a new Vercel project, import the repo, set environment
+variables</li>
+<li>Add the domain to the new Vercel project</li>
+<li>Coordinate with current owner to update DNS records</li>
+<li>Verify: admin login, course display, payment flow, contact form,
+access recovery</li>
+<li>Confirm handoff complete</li>
+</ol>
+<hr />
+<h2 id="post-handoff-cleanup-for-current-owner">12. Post-Handoff Cleanup
+(For Current Owner)</h2>
+<p>Once the new team confirms everything works:</p>
+<ol type="1">
+<li><strong>Delete</strong> old Vercel project</li>
+<li><strong>Delete</strong> old Supabase project (revokes all keys
+automatically)</li>
+<li><strong>Remove</strong> local <code>.env.local</code> files and any
+stored credentials</li>
+<li><strong>Optionally</strong> change Gmail app password if you want to
+revoke the shared credential later</li>
+</ol>
+<p><strong>Note:</strong> Since Razorpay and Gmail credentials are
+shared with the new team, coordinate before revoking anything.</p>
+<hr />
+<h2 id="handoff-checklist">13. Handoff Checklist</h2>
+<ul class="task-list">
+<li><label><input type="checkbox" />Git repository shared with new
+team</label></li>
+<li><label><input type="checkbox" /><code>supabase-migration.sql</code>
+reviewed and understood by new team</label></li>
+<li><label><input type="checkbox" />Supabase data exported (all 5 tables
++ storage bucket thumbnails)</label></li>
+<li><label><input type="checkbox" />New Supabase project created and
+data imported</label></li>
+<li><label><input type="checkbox" />Razorpay credentials shared securely
+with new team</label></li>
+<li><label><input type="checkbox" />Gmail SMTP credentials shared
+securely with new team</label></li>
+<li><label><input type="checkbox" />New Vercel project created with all
+environment variables</label></li>
+<li><label><input type="checkbox" />Domain added to new Vercel
+project</label></li>
+<li><label><input type="checkbox" />DNS records updated to point to new
+Vercel</label></li>
+<li><label><input type="checkbox" />Site verified on new deployment
+(admin, payments, emails, videos)</label></li>
+<li><label><input type="checkbox" />Old Vercel project
+deleted</label></li>
+<li><label><input type="checkbox" />Old Supabase project
+deleted</label></li>
+</ul>
+<hr />
+<p><em>This document contains sensitive infrastructure details. Share
+securely and delete after migration is complete.</em></p>
+</body>
+</html>
