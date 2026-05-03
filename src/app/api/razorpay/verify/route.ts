@@ -14,7 +14,14 @@ export async function POST(request: Request) {
       .update(body)
       .digest('hex');
 
-    if (expectedSignature !== razorpay_signature) {
+    const signaturesMatch =
+      expectedSignature.length === razorpay_signature.length &&
+      crypto.timingSafeEqual(
+        Buffer.from(expectedSignature),
+        Buffer.from(razorpay_signature)
+      );
+
+    if (!signaturesMatch) {
       await getSupabaseAdmin()
         .from('purchases')
         .update({ status: 'failed', razorpay_payment_id, razorpay_signature })
