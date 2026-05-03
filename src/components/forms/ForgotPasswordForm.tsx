@@ -2,13 +2,18 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import Input from '@/components/ui/Input';
 
 export default function ForgotPasswordForm() {
+  const searchParams = useSearchParams();
+  const linkExpired = searchParams.get('error') === 'link_expired';
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(
+    linkExpired ? 'Reset link expired or was already used. Please request a new one.' : ''
+  );
   const supabase = createClient();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

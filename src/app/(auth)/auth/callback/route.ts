@@ -23,7 +23,15 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient();
-    await supabase.auth.exchangeCodeForSession(code);
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (error) {
+      // Code exchange failed — redirect to forgot-password with error hint
+      const fallback = redirect === '/reset-password' ? '/forgot-password' : '/login';
+      return NextResponse.redirect(
+        `${origin}${fallback}?error=link_expired`
+      );
+    }
   }
 
   return NextResponse.redirect(`${origin}${redirect}`);
