@@ -62,6 +62,13 @@ export interface SiteSettings {
   updated_at: string;
 }
 
+export interface Testimonial {
+  id: string;
+  image_url: string;
+  sort_order: number;
+  created_at: string;
+}
+
 // Helper type for course with videos
 export interface CourseWithVideos extends Course {
   course_videos: CourseVideo[];

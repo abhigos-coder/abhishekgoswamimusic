@@ -41,10 +41,12 @@ const socials = [
 ];
 
 export default async function AboutPage() {
-  const { data: settings } = await getSupabaseAdmin()
-    .from('site_settings')
-    .select('about_image_url, about_bio')
-    .single();
+  const supabase = getSupabaseAdmin();
+
+  const [{ data: settings }, { data: testimonials }] = await Promise.all([
+    supabase.from('site_settings').select('about_image_url, about_bio').single(),
+    supabase.from('testimonials').select('*').order('sort_order'),
+  ]);
 
   const aboutImageUrl = settings?.about_image_url ?? null;
   const aboutBio = settings?.about_bio || DEFAULT_BIO;
@@ -107,6 +109,25 @@ export default async function AboutPage() {
           ))}
         </div>
       </section>
+
+      {/* Testimonials */}
+      {testimonials && testimonials.length > 0 && (
+        <section className="mb-16">
+          <p className="label-mono mb-8">What Students Say</p>
+          <div className="columns-2 sm:columns-3 gap-4 space-y-4">
+            {testimonials.map((t: { id: string; image_url: string }, i: number) => (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                key={t.id}
+                src={t.image_url}
+                alt={`Student feedback ${i + 1}`}
+                className="w-full rounded-lg border border-border break-inside-avoid"
+                loading="lazy"
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Contact */}
       <section id="contact" className="border-t border-border pt-16">

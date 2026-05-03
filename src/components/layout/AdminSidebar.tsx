@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, BookOpen, CreditCard, MessageSquare, Settings, ArrowLeft, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, BookOpen, CreditCard, MessageSquare, Image, Settings, ArrowLeft, LogOut, Menu, X } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 const ADMIN_LINKS = [
@@ -11,6 +11,7 @@ const ADMIN_LINKS = [
   { href: '/admin/courses', label: 'Courses', icon: BookOpen },
   { href: '/admin/payments', label: 'Payments', icon: CreditCard },
   { href: '/admin/messages', label: 'Messages', icon: MessageSquare },
+  { href: '/admin/testimonials', label: 'Testimonials', icon: Image },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 
